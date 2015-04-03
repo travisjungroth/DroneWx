@@ -118,6 +118,8 @@ class Tfr(object) :
         self.state = root.find('.//txtNameUSState').text
         self.text = root.find('.//txtDescrTraditional').text
         self.issued_time = notam_time_to_timestamp(root.find('.//dateIssued').text)
+        self.effective = notam_time_to_timestamp(root.find('.//dateEffective').text)
+        self.expire = notam_time_to_timestamp(root.find('.//dateEffective').text)
 
         instructions = []
         for instruction in root.findall('.//txtInstr') :
@@ -186,6 +188,7 @@ def tfr_loader(tfr_list) :
     with open('files/tfrs.pickle', 'rb') as f :
         tfrs = pickle.load(f)
 
+    #tfrs = {}
     #Tfrs without location data get ignored and saved to this list.
     with open('files/tfr_ignore_list.pickle', 'rb') as f :
         tfr_ignore_list = pickle.load(f)
