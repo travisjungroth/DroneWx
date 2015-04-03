@@ -1,10 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from dronewx import *
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Index'
+    return render_template('index.html')
 
 @app.route('/briefing', methods=['GET','POST'])
 def briefing():
@@ -12,6 +12,7 @@ def briefing():
     radius = 10
     nearby_airports = nearby_airports_finder(location, radius)
     return render_template('briefing.html',airports=nearby_airports)
+
 
 if __name__=='__main__':
     app.run(debug=True)
