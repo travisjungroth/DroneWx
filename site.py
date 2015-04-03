@@ -10,18 +10,19 @@ def index():
 def briefing():
     API_KEY = os.getenv('FORECAST_API_KEY')
     location = (39.1,-121.436389)
-    radius = 10
+    
+
     distance = 10
 
     nearby_tfrs = tfr_search(location, distance)
-    nearby_airports = nearby_airports_finder(location, radius)
+    nearby_airports = nearby_airports_finder(location, distance)
     forecast = forecastio.load_forecast(API_KEY, location[0], location[1])
 
     currently = forecast.currently()
     hourly = forecast.hourly()
     daily = forecast.daily()
 
-    return render_template('briefing.html', airports=nearby_airports, tfrs = nearby_tfrs, currently = currently, hourly = hourly, daily = daily)
+    return render_template('briefing.html', distance=distance, airports=nearby_airports, tfrs = nearby_tfrs, currently = currently, hourly = hourly, daily = daily)
 
 
 if __name__=='__main__':

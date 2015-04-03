@@ -34,11 +34,25 @@
             <h4><strong>Warning: DroneWx is <em>not</em> an official source of information for flight restrictions. Call Flight Service at 1-800-WX-BRIEF for a briefing.</strong></h4>
             {% for tfr in tfrs %}
             <h4>{{ tfr.city }}, {{ tfr.state.title() }}</h4>
-            <p>Effective: {{ tfr.effective }}</p>
+              {% if tfr.instructions %}
+              <ul>
+                {% for instruction in tfr.instructions %}
+                <li>{{ instruction }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
             {% endfor %}
           </div>
         </div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <h3 class="panel-title">No Flight Restrictions found within {{ distance }} miles.</h3>
+          </div>
+        </div>
+        
         {% endif %}
+
         {% if airports %}
         <div class="panel panel-warning">
           <div class="panel-heading">
@@ -47,11 +61,17 @@
           <div class="panel-body">
             {% for airport in airports %}
             <p>{{ airport.airport.name }} {{ airport.distance }} mi {{ airport.direction }}<br />
+              {{ airport.airport.facility_type }} <br />
             {{ airport.airport.phone_number }}</p>
             {% endfor %}
           </div>
         </div>
-
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <h3 class="panel-title">No airports found within {{ distance }} miles.</h3>
+          </div>
+        </div>
         {% endif %}
 
       </div>
