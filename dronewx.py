@@ -49,7 +49,7 @@ class NearbyAirport(Airport) :
 def airports_txt_parser() :
     airports = []
 
-    with open('briefing/files/APT.txt', 'r', encoding="latin1") as airports_file :
+    with open('files/APT.txt', 'r', encoding="latin1") as airports_file :
         for line in airports_file :
             if line[0:3] == 'APT' :
                 airports.append(Airport(line))
@@ -57,7 +57,7 @@ def airports_txt_parser() :
 
 def airports_saver() :
     airports = airports_txt_parser()
-    with open('briefing/files/airports.pickle', 'wb') as f :
+    with open('files/airports.pickle', 'wb') as f :
         pickle.dump(airports, f, pickle.HIGHEST_PROTOCOL)
 
 def haversine(lat1, lon1, lat2, lon2) :
@@ -95,8 +95,8 @@ def direction_finder(lat1, lon1, lat2, lon2) :
 
 def nearby_airports_finder(location, radius) :
     #TODO add logic to update the airports pickle file
-
-    with open('briefing/files/airports.pickle', 'rb') as f :
+    #airports_saver()
+    with open('files/airports.pickle', 'rb') as f :
         airports = pickle.load(f)
     nearby_airports = []
     for airport in airports :
