@@ -10,7 +10,7 @@ def index():
 def briefing():
     API_KEY = os.getenv('FORECAST_API_KEY')
     location = (39.1,-121.436389)
-    
+
 
     distance = 10
 

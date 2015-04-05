@@ -117,10 +117,14 @@ class Tfr(object) :
         self.city = root.find('.//txtNameCity').text
         self.state = root.find('.//txtNameUSState').text
         self.text = root.find('.//txtDescrTraditional').text
-        self.issued_time = notam_time_to_timestamp(root.find('.//dateIssued').text)
-        self.effective = notam_time_to_timestamp(root.find('.//dateEffective').text)
-        self.expire = notam_time_to_timestamp(root.find('.//dateEffective').text)
-
+        self.issued_time = notam_time_converter(root.find('.//dateIssued').text)
+        try:
+            self.effective = notam_time_converter(root.find('.//dateEffective').text)
+            self.expire = notam_time_converter(root.find('.//dateExpire').text)
+        except AttributeError :
+            self.effective = 'Unknown'
+            self.expire = 'Unknown'
+            
         instructions = []
         for instruction in root.findall('.//txtInstr') :
             instructions.append(instruction.text)
@@ -136,8 +140,8 @@ class Tfr(object) :
 class TfrZone(object) :
     def __init__(self, tfr_area_group) :
         #Timestamps of the start and end time.
-        self.effective = notam_time_to_timestamp(tfr_area_group.find('.//dateEffective').text)
-        self.expire = notam_time_to_timestamp(tfr_area_group.find('.//dateEffective').text)
+        self.effective = notam_time_converter(tfr_area_group.find('.//dateEffective').text)
+        self.expire = notam_time_converter(tfr_area_group.find('.//dateEffective').text)
         #A list of (x,y)
         points = []
         for avx in tfr_area_group.findall('./abdMergedArea/Avx') :
@@ -187,9 +191,9 @@ def tfr_search(location, distance) :
 def tfr_loader(tfr_list) :
     with open('files/tfrs.pickle', 'rb') as f :
         tfrs = pickle.load(f)
-
-    #tfrs = {}
-    #Tfrs without location data get ignored and saved to this list.
+    # so lazy. just uncomment to clear the tfr cache.
+    tfrs = {}
+    # Tfrs without location data get ignored and saved to this list.
     with open('files/tfr_ignore_list.pickle', 'rb') as f :
         tfr_ignore_list = pickle.load(f)
 
@@ -199,7 +203,7 @@ def tfr_loader(tfr_list) :
             r = requests.get('http://tfr.faa.gov/save_pages/detail_' + tfr_id + '.xml')
             r.encoding = 'UTF-8'
             xml = r.text
-            #<Avx is the loaction data. Without this, they're impossible to auto map.
+            #<Avx is the location data. Without this, they're impossible to auto map.
             #May also be a national TFR.
             if '<Avx>' not in xml :
                 tfr_ignore_list.append(tfr_id)
@@ -255,10 +259,10 @@ def tfr_list_parser(html) :
     return tfr_list
 
 
-def notam_time_to_timestamp(time_string) :
-    #Takes the timestamp in the notam xml and returns a float timestamp
-    timestamp = time.mktime(datetime.datetime.strptime(time_string, "%Y-%m-%dT%H:%M:%S").timetuple())
-    return timestamp
+def notam_time_converter(time_string) :
+    date_time = datetime.datetime.strptime(time_string, "%Y-%m-%dT%H:%M:%S")
+    date_string = date_time.strftime('%B %d, %Y at %H:%M UTC')
+    return date_string
 
 def degrees_string_to_float(string) :
     """Converts a degree string with an orthogonal letter to a signed float.

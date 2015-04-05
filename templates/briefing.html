@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
+
 
     <title>DroneWx</title>
 
@@ -34,6 +34,8 @@
             <h4><strong>Warning: DroneWx is <em>not</em> an official source of information for flight restrictions. Call Flight Service at 1-800-WX-BRIEF for a briefing.</strong></h4>
             {% for tfr in tfrs %}
             <h4>{{ tfr.city }}, {{ tfr.state.title() }}</h4>
+            <p>Effective: {{ tfr.effective }}<br />
+              Expires: {{ tfr.expire }}</p>
               {% if tfr.instructions %}
               <ul>
                 {% for instruction in tfr.instructions %}
@@ -50,7 +52,7 @@
             <h3 class="panel-title">No Flight Restrictions found within {{ distance }} miles.</h3>
           </div>
         </div>
-        
+
         {% endif %}
 
         {% if airports %}
