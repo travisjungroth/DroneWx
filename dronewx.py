@@ -13,23 +13,94 @@ def main() :
     nearby_tfrs = tfr_search(location, distance)
     nearby_airports = nearby_airports_finder(location, radius)
 
-    forecast = forecastio.load_forecast(API_KEY, location[0], location[1])
-    current = forecast.currently()
+    response = forecastio.load_forecast(API_KEY, location[0], location[1])
+    weather = Weather(response)
 
-    print('Current Weather')
-    print('---------------')
-    print('Wind: {} at {}kts'.format(current.windBearing,round(current.windSpeed*0.87)))
-    print('Temperature: {}F'.format(round(current.temperature)))
-    print('Dew point: {}F'.format(round(current.dewPoint)))
-    print('Clouds: {}'.format(cloud_cover(current.cloudCover)))
-    print('Est. Cloud Base: {} ft AGL'.format(int(round((current.temperature - current.dewPoint) * 227.27, -2))))
-    print('Chance of Rain: {}%'.format(current.precipProbability * 100))
+    print(weather.current.time)
+    print('Wind: ' + weather.current.wind)
+    print('Temp: ' + weather.current.temperature)
+    print('Dew Point: ' + weather.current.dewPoint)
+    print('Cloud Cover: ' + weather.current.cloudCover)
+    print('Cloud Base: ' + weather.current.cloudBase)
+    print('Visibility: ' + weather.current.visibility)
+    print('Chance of Precip: ' + weather.current.precipProbability)
 
     for nearby_airport in nearby_airports :
         print ('{} Distance: {} mi {}'.format(nearby_airport.airport.name, nearby_airport.distance, nearby_airport.direction))
 
     for nearby_tfr in nearby_tfrs :
         print (nearby_tfr.id)
+
+class Weather(object):
+    def __init__(self, response):
+        self.current = WeatherBlock(response.currently())
+
+        self.hourly = []
+        for hour in response.hourly().data:
+            self.hourly.append(WeatherBlock(hour))
+
+        self.daily = []
+        for day in response.daily().data:
+            self.daily.append(WeatherBlock(day))
+
+class WeatherBlock(object):
+    def __init__(self, block):
+        try:
+            self.time = block.time.strftime('%a, %b %d at %H:%M')
+        except AttributeError:
+            self.time = 'Unknown'
+
+        if hasattr(block, 'windSpeed'):
+            if block.windSpeed == 0:
+                self.wind = 'Calm'
+            elif block.windSpeed:
+                try:
+                    self.wind = '{:03}° at {}kts'.format(block.windBearing,round(block.windSpeed*0.87))
+                except AttributeError:
+                    self.wind = '{}kts'.format(round(block.windSpeed*0.87))
+
+        try:
+            self.temperature = '{}°F'.format(round(block.temperature))
+        except AttributeError:
+            self.temperature = 'Unknown'
+
+        try:
+            self.dewPoint = '{}°F'.format(round(block.dewPoint))
+        except AttributeError:
+            self.dewPoint = 'Unknown'
+
+        try:
+            self.cloudBase = '{} ft AGL'.format(int(round((block.temperature - block.dewPoint) * 227.27, -2)))
+        except AttributeError:
+            self.cloudBase = 'Unknown'
+
+        try:
+            self.cloudCover = '{}'.format(cloud_cover(block.cloudCover))
+        except AttributeError:
+            self.cloudCover = 'Unknown'
+
+        try:
+            self.precipProbability = '{}%'.format(block.precipProbability * 100)
+        except AttributeError:
+            self.precipProbability = 'Unknown'
+
+        try:
+            if block.visibility == 10:
+                self.visibility = '{}+ miles'.format(block.visibility)
+            else:
+                self.visibility = '{} miles'.format(block.visibility)
+        except AttributeError:
+            self.visibility = 'Unknown'
+
+        try:
+            self.temperatureMin = '{}°F'.format(round(block.temperatureMin))
+        except AttributeError:
+            self.temperatureMin = 'Unknown'
+
+        try:
+            self.temperatureMax = '{}°F'.format(round(block.temperatureMax))
+        except AttributeError:
+            self.temperatureMax = 'Unknown'
 
 class Airport(object):
     def __init__(self, line) :
@@ -124,7 +195,7 @@ class Tfr(object) :
         except AttributeError :
             self.effective = 'Unknown'
             self.expire = 'Unknown'
-            
+
         instructions = []
         for instruction in root.findall('.//txtInstr') :
             instructions.append(instruction.text)
@@ -192,7 +263,7 @@ def tfr_loader(tfr_list) :
     with open('files/tfrs.pickle', 'rb') as f :
         tfrs = pickle.load(f)
     # so lazy. just uncomment to clear the tfr cache.
-    tfrs = {}
+    #tfrs = {}
     # Tfrs without location data get ignored and saved to this list.
     with open('files/tfr_ignore_list.pickle', 'rb') as f :
         tfr_ignore_list = pickle.load(f)
@@ -285,3 +356,6 @@ def cloud_cover(cloud_float) :
         cloud_cover = 'Overcast'
 
     return cloud_cover
+
+if __name__=="__main__":
+    main()
