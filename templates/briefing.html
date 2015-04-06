@@ -20,30 +20,94 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-
   <body>
-
     <div class="container">
       <div class="col-xs-10 col-xs-offset-1">
+        {% if weather %}
+        <div class="panel-group">
+          <div class="panel panel-info">
+            <div class="panel-heading" data-toggle="collapse" data-target="#current-weather">
+              <h3 class="panel-title">Current Weather</h3>
+            </div>
+            <div id="current-weather" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <h5>{{ weather.current.time }}</h5>
+                <ul>
+                  <li>Wind: {{ weather.current.wind }}</li>
+                  <li>Temperature: {{ weather.current.temperature }}</li>
+                  <li>Dew Point: {{ weather.current.dewPoint }}</li>
+                  <li>Cloud Cover: {{ weather.current.cloudCover }}</li>
+                  <li>Est. Cloud Base: {{ weather.current.cloudBase }}</li>
+                  <li>Visibility: {{ weather.current.visibility }}</li>
+                  <li>Chance of Precip: {{ weather.current.precipProbability }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-info">
+            <div class="panel-heading" data-toggle="collapse" data-target="#hourly-weather">
+              <h3 class="panel-title">Forecast by Hour</h3>
+            </div>
+            <div id="hourly-weather" class="panel-collapse collapse">
+              {% for hour in weather.hourly %}
+              <div class="panel-body">
+                <h5>{{ hour.time }}</h5>
+                <ul>
+                  <li>Wind: {{ hour.wind }}</li>
+                  <li>Temperature: {{ hour.temperature }}</li>
+                  <li>Dew Point: {{ hour.dewPoint }}</li>
+                  <li>Cloud Cover: {{ hour.cloudCover }}</li>
+                  <li>Est. Cloud Base: {{ hour.cloudBase }}</li>
+                  <li>Visibility: {{ hour.visibility }}</li>
+                  <li>Chance of Precip: {{ hour.precipProbability }}</li>
+                </ul>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="panel panel-info">
+            <div class="panel-heading" data-toggle="collapse" data-target="#daily-weather">
+              <h3 class="panel-title">Forecast by Day</h3>
+            </div>
+            <div id="daily-weather" class="panel-collapse collapse">
+              {% for day in weather.daily %}
+              <div class="panel-body">
+                <h5>{{ day.time }}</h5>
+                <ul>
+                  <li>Wind: {{ day.wind }}</li>
+                  <li>High: {{ day.temperatureMax }}</li>
+                  <li>Low: {{ day.temperatureMin }}</li>
+                  <li>Cloud Cover: {{ day.cloudCover }}</li>
+                  <li>Visibility: {{ day.visibility }}</li>
+                  <li>Chance of Precip: {{ day.precipProbability }}</li>
+                </ul>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
         {% if tfrs %}
         <div class="panel panel-danger">
-          <div class="panel-heading">
+          <div class="panel-heading" data-toggle="collapse" data-target="#tfr-info">
             <h3 class="panel-title">Flight Restrictions In Your Area</h3>
           </div>
-          <div class="panel-body">
-            <h4><strong>Warning: DroneWx is <em>not</em> an official source of information for flight restrictions. Call Flight Service at 1-800-WX-BRIEF for a briefing.</strong></h4>
-            {% for tfr in tfrs %}
-            <h4>{{ tfr.city }}, {{ tfr.state.title() }}</h4>
-            <p>Effective: {{ tfr.effective }}<br />
-              Expires: {{ tfr.expire }}</p>
-              {% if tfr.instructions %}
-              <ul>
-                {% for instruction in tfr.instructions %}
-                <li>{{ instruction }}</li>
-                {% endfor %}
-              </ul>
-              {% endif %}
-            {% endfor %}
+          <div id="tfr-info" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <h4><strong>Warning: DroneWx is <em>not</em> an official source of information for flight restrictions. Call Flight Service at 1-800-WX-BRIEF for a briefing.</strong></h4>
+              {% for tfr in tfrs %}
+              <h4>{{ tfr.city }}, {{ tfr.state.title() }}</h4>
+              <p>Effective: {{ tfr.effective }}<br />
+                Expires: {{ tfr.expire }}</p>
+                {% if tfr.instructions %}
+                <ul>
+                  {% for instruction in tfr.instructions %}
+                  <li>{{ instruction }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              {% endfor %}
+            </div>
           </div>
         </div>
         {% else %}
@@ -57,15 +121,17 @@
 
         {% if airports %}
         <div class="panel panel-warning">
-          <div class="panel-heading">
+          <div class="panel-heading" data-toggle="collapse" data-target="#airport-info">
             <h3 class="panel-title">Airports In Your Area</h3>
           </div>
-          <div class="panel-body">
-            {% for airport in airports %}
-            <p>{{ airport.airport.name }} {{ airport.distance }} mi {{ airport.direction }}<br />
-              {{ airport.airport.facility_type }} <br />
-            {{ airport.airport.phone_number }}</p>
-            {% endfor %}
+          <div id="airport-info" class="panel-collapse collapse in">
+            <div class="panel-body">
+              {% for airport in airports %}
+              <p>{{ airport.airport.name }} {{ airport.distance }} mi {{ airport.direction }}<br />
+                {{ airport.airport.facility_type }} <br />
+              {{ airport.airport.phone_number }}</p>
+              {% endfor %}
+            </div>
           </div>
         </div>
         {% else %}

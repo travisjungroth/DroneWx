@@ -80,7 +80,7 @@ class WeatherBlock(object):
             self.cloudCover = 'Unknown'
 
         try:
-            self.precipProbability = '{}%'.format(block.precipProbability * 100)
+            self.precipProbability = '{}%'.format(int(block.precipProbability * 100))
         except AttributeError:
             self.precipProbability = 'Unknown'
 
