@@ -9,7 +9,6 @@ def index():
 @app.route('/briefing')
 def briefing():
 
-
     location = (float(request.args['latitude']), float(request.args['longitude']))
 
     API_KEY = os.getenv('FORECAST_API_KEY')
