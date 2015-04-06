@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from dronewx import *
 app = Flask(__name__)
 
@@ -6,10 +6,13 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/briefing', methods=['GET','POST'])
+@app.route('/briefing')
 def briefing():
+
+
+    location = (float(request.args['latitude']), float(request.args['longitude']))
+
     API_KEY = os.getenv('FORECAST_API_KEY')
-    location = (39.1,-121.436389)
     distance = 10
 
     nearby_tfrs = tfr_search(location, distance)

@@ -93,6 +93,7 @@ class WeatherBlock(object):
             self.precipProbability = 'Unknown'
 
         try:
+            # Vis maxes out at ten, this changes that to 10+
             if block.visibility == 10:
                 self.visibility = '{}+ miles'.format(block.visibility)
             else:
