@@ -33,15 +33,15 @@ def main() :
 
 class Weather(object):
     def __init__(self, response):
-        self.current = WeatherBlock(response.currently())
+        self.current = WeatherBlockCurrent(response.currently())
 
         self.hourly = []
         for hour in response.hourly().data:
-            self.hourly.append(WeatherBlock(hour))
+            self.hourly.append(WeatherBlockHour(hour))
 
         self.daily = []
         for day in response.daily().data:
-            self.daily.append(WeatherBlock(day))
+            self.daily.append(WeatherBlockDay(day))
 
 class WeatherBlock(object):
     def __init__(self, block):
@@ -122,6 +122,17 @@ class WeatherBlockDay(WeatherBlock) :
             self.temperatureMax = '{}°F'.format(round(block.temperatureMax))
         except AttributeError:
             self.temperatureMax = 'Unknown'
+
+        try:
+            self.sunriseTime = block.sunriseTime.strftime('%H:%M')
+        except AttributeError:
+            self.sunriseTime = 'Unknown'
+
+        try:
+            self.sunsetTime = block.sunsetTime.strftime('%H:%M')
+        except AttributeError:
+            self.sunsetTime = 'Unknown'
+
 
 class Airport(object):
     def __init__(self, line) :
