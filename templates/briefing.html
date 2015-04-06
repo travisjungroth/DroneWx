@@ -49,6 +49,9 @@
               <h3 class="panel-title">Forecast by Hour</h3>
             </div>
             <div id="hourly-weather" class="panel-collapse collapse">
+              <div class="panel-body">
+                <p>{{ weather.hourlySummary }}</p>
+              </div>
               {% for hour in weather.hourly %}
               <div class="panel-body">
                 <h5>{{ hour.time }}</h5>
@@ -70,6 +73,9 @@
               <h3 class="panel-title">Forecast by Day</h3>
             </div>
             <div id="daily-weather" class="panel-collapse collapse">
+              <div class="panel-body">
+                <p>{{ weather.dailySummary }}</p>
+              </div>
               {% for day in weather.daily %}
               <div class="panel-body">
                 <h5>{{ day.time }}</h5>

@@ -35,9 +35,17 @@ class Weather(object):
     def __init__(self, response):
         self.current = WeatherBlockCurrent(response.currently())
 
+        self.hourlySummary = response.hourly().summary
+
+        self.dailySummary = response.daily().summary
+
         self.hourly = []
+        i = 0
+        # Limited to 8 hours, and only the one in the future.
         for hour in response.hourly().data:
-            self.hourly.append(WeatherBlockHour(hour))
+            if 0 < i < 9:
+                self.hourly.append(WeatherBlockHour(hour))
+            i += 1
 
         self.daily = []
         for day in response.daily().data:
@@ -94,6 +102,8 @@ class WeatherBlock(object):
 
 class WeatherBlockCurrent(WeatherBlock) :
     def __init__(self, block):
+        super().__init__(block)
+
         try:
             self.time = block.time.strftime('%a, %b %d at %H:%M')
         except AttributeError:
@@ -101,6 +111,8 @@ class WeatherBlockCurrent(WeatherBlock) :
 
 class WeatherBlockHour(WeatherBlock) :
     def __init__(self, block):
+        super().__init__(block)
+
         try:
             self.time = block.time.strftime('%a, %b %d at %H:%M')
         except AttributeError:
@@ -108,6 +120,8 @@ class WeatherBlockHour(WeatherBlock) :
 
 class WeatherBlockDay(WeatherBlock) :
     def __init__(self, block):
+        super().__init__(block)
+
         try:
             self.time = block.time.strftime('%a, %b %d')
         except AttributeError:
@@ -132,7 +146,6 @@ class WeatherBlockDay(WeatherBlock) :
             self.sunsetTime = block.sunsetTime.strftime('%H:%M')
         except AttributeError:
             self.sunsetTime = 'Unknown'
-
 
 class Airport(object):
     def __init__(self, line) :
