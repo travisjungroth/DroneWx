@@ -92,6 +92,27 @@ class WeatherBlock(object):
         except AttributeError:
             self.visibility = 'Unknown'
 
+class WeatherBlockCurrent(WeatherBlock) :
+    def __init__(self, block):
+        try:
+            self.time = block.time.strftime('%a, %b %d at %H:%M')
+        except AttributeError:
+            self.time = 'Unknown'
+
+class WeatherBlockHour(WeatherBlock) :
+    def __init__(self, block):
+        try:
+            self.time = block.time.strftime('%a, %b %d at %H:%M')
+        except AttributeError:
+            self.time = 'Unknown'
+
+class WeatherBlockDay(WeatherBlock) :
+    def __init__(self, block):
+        try:
+            self.time = block.time.strftime('%a, %b %d')
+        except AttributeError:
+            self.time = 'Unknown'
+
         try:
             self.temperatureMin = '{}°F'.format(round(block.temperatureMin))
         except AttributeError:

@@ -32,15 +32,15 @@
             <div id="current-weather" class="panel-collapse collapse in">
               <div class="panel-body">
                 <h5>{{ weather.current.time }}</h5>
-                <ul>
-                  <li>Wind: {{ weather.current.wind }}</li>
-                  <li>Temperature: {{ weather.current.temperature }}</li>
-                  <li>Dew Point: {{ weather.current.dewPoint }}</li>
-                  <li>Cloud Cover: {{ weather.current.cloudCover }}</li>
-                  <li>Est. Cloud Base: {{ weather.current.cloudBase }}</li>
-                  <li>Visibility: {{ weather.current.visibility }}</li>
-                  <li>Chance of Precip: {{ weather.current.precipProbability }}</li>
-                </ul>
+                <p>
+                  Wind: {{ weather.current.wind }}<br />
+                  Temperature: {{ weather.current.temperature }}<br />
+                  Dew Point: {{ weather.current.dewPoint }}<br />
+                  Cloud Cover: {{ weather.current.cloudCover }}<br />
+                  Est. Cloud Base: {{ weather.current.cloudBase }}<br />
+                  Visibility: {{ weather.current.visibility }}<br />
+                  Chance of Precip: {{ weather.current.precipProbability }}<br />
+                </p>
               </div>
             </div>
           </div>
@@ -52,15 +52,15 @@
               {% for hour in weather.hourly %}
               <div class="panel-body">
                 <h5>{{ hour.time }}</h5>
-                <ul>
-                  <li>Wind: {{ hour.wind }}</li>
-                  <li>Temperature: {{ hour.temperature }}</li>
-                  <li>Dew Point: {{ hour.dewPoint }}</li>
-                  <li>Cloud Cover: {{ hour.cloudCover }}</li>
-                  <li>Est. Cloud Base: {{ hour.cloudBase }}</li>
-                  <li>Visibility: {{ hour.visibility }}</li>
-                  <li>Chance of Precip: {{ hour.precipProbability }}</li>
-                </ul>
+                <p>
+                  Wind: {{ hour.wind }}<br />
+                  Temperature: {{ hour.temperature }}<br />
+                  Dew Point: {{ hour.dewPoint }}<br />
+                  Cloud Cover: {{ hour.cloudCover }}<br />
+                  Est. Cloud Base: {{ hour.cloudBase }}<br />
+                  Visibility: {{ hour.visibility }}<br />
+                  Chance of Precip: {{ hour.precipProbability }}<br />
+                </p>
               </div>
               {% endfor %}
             </div>
@@ -73,14 +73,14 @@
               {% for day in weather.daily %}
               <div class="panel-body">
                 <h5>{{ day.time }}</h5>
-                <ul>
-                  <li>Wind: {{ day.wind }}</li>
-                  <li>High: {{ day.temperatureMax }}</li>
-                  <li>Low: {{ day.temperatureMin }}</li>
-                  <li>Cloud Cover: {{ day.cloudCover }}</li>
-                  <li>Visibility: {{ day.visibility }}</li>
-                  <li>Chance of Precip: {{ day.precipProbability }}</li>
-                </ul>
+                <p>
+                  Wind: {{ day.wind }}<br />
+                  High: {{ day.temperatureMax }}<br />
+                  Low: {{ day.temperatureMin }}<br />
+                  Cloud Cover: {{ day.cloudCover }}<br />
+                  Visibility: {{ day.visibility }}<br />
+                  Chance of Precip: {{ day.precipProbability }}<br />
+                </p>
               </div>
               {% endfor %}
             </div>
