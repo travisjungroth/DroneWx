@@ -5,20 +5,19 @@
           <input type="hidden" name="latitude" id="latitude">
           <input type="hidden" name="longitude" id="longitude">
         </form>
-        <button onclick="getLocation()">Try It</button>
-
-        <p id="demo"></p>
-
+        <button class="btn btn-primary" onclick="getLocation()">Use My Location</button>
+        <div id="location-warning">
+        </div>
       </div>
     </div><!-- /.container -->
     <script>
-    var x = document.getElementById("demo");
+    var x = document.getElementById("location-warning");
 
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(sendLocation,locationDenied);
         } else {
-            x.innerHTML = "Geolocation is not supported by this browser.";
+            x.innerHTML = '<div class="alert alert-danger">Geolocation is not supported by your browser. Use the search form below instead</div>';
         }
     }
 
@@ -29,7 +28,7 @@
     }
 
     function locationDenied() {
-      x.innerHTML = "Denied";
+      x.innerHTML = '<div class="alert alert-danger">Geolocation was denied. Use the search form below.</div>';
     }
     </script>
 {% include 'footer.html' %}
