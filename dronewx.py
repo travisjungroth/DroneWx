@@ -194,21 +194,21 @@ def direction_finder(lat1, lon1, lat2, lon2) :
     deg = (90 - degrees(atan2(lat2-lat1, lon2-lon1))) % 360
     #Convert the degrees to orthogonal
     if deg <= 22.5 or 337.5 < deg:
-        return 'N'
+        return 'North'
     if 22.5 < deg <= 67.5 :
-        return 'NE'
+        return 'Northeast'
     if 67.5 < deg <= 112.5 :
-        return 'E'
+        return 'East'
     if 112.5 < deg <= 157.5 :
-        return 'SE'
+        return 'Southeast'
     if 157.5 < deg <= 202.5 :
-        return 'SE'
+        return 'South'
     if 202.5 < deg <= 247.5 :
-        return 'SE'
+        return 'Southwest'
     if 247.5 < deg <= 292.5 :
-        return 'SE'
+        return 'West'
     if 292.5 < deg <= 337.5 :
-        return 'SE'
+        return 'Northwest'
 
 def nearby_airports_finder(location, radius) :
     #TODO add logic to update the airports pickle file
