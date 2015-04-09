@@ -231,8 +231,14 @@ class Tfr(object) :
         root = ET.fromstring(xml)
         self.time_zone_start = root.find('.//codeTimeZone').text
         self.time_zone_end = root.find('.//codeExpirationTimeZone').text
-        self.city = root.find('.//txtNameCity').text
-        self.state = root.find('.//txtNameUSState').text
+        try:
+            self.city = root.find('.//txtNameCity').text
+        except AttributeError:
+            self.city = 'Unknown'
+        try:
+            self.state = root.find('.//txtNameUSState').text
+        except AttributeError:
+            self.city = 'Unknown'
         self.text = root.find('.//txtDescrTraditional').text
         self.issued_time = notam_time_converter(root.find('.//dateIssued').text)
         try:
