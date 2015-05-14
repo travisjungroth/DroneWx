@@ -1,7 +1,9 @@
 from flask import Flask, render_template, url_for, request
-from dronewx import *
+import os, sys, forecastio
+sys.path.append('/home/jungroth/webapps/dronewx/drone')
+import dronewx
+from dronewx import Weather
 app = Flask(__name__)
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -15,8 +17,8 @@ def briefing():
             API_KEY = os.getenv('FORECAST_API_KEY')
             distance = 10
 
-            nearby_tfrs = tfr_search(location, distance)
-            nearby_airports = nearby_airports_finder(location, distance)
+            nearby_tfrs = dronewx.tfr_search(location, distance)
+            nearby_airports = dronewx.nearby_airports_finder(location, distance)
             response = forecastio.load_forecast(API_KEY, location[0], location[1])
 
             weather = Weather(response)

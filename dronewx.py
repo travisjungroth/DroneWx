@@ -4,33 +4,6 @@ from shapely.geometry import Polygon
 import requests, pickle, os, time, datetime, re, forecastio
 import xml.etree.ElementTree as ET
 
-def main() :
-    API_KEY = os.getenv('FORECAST_API_KEY')
-    location = (39.1,-121.436389)
-    radius = 10
-    distance = 10
-
-    nearby_tfrs = tfr_search(location, distance)
-    nearby_airports = nearby_airports_finder(location, radius)
-
-    response = forecastio.load_forecast(API_KEY, location[0], location[1])
-    weather = Weather(response)
-
-    print(weather.current.time)
-    print('Wind: ' + weather.current.wind)
-    print('Temp: ' + weather.current.temperature)
-    print('Dew Point: ' + weather.current.dewPoint)
-    print('Cloud Cover: ' + weather.current.cloudCover)
-    print('Cloud Base: ' + weather.current.cloudBase)
-    print('Visibility: ' + weather.current.visibility)
-    print('Chance of Precip: ' + weather.current.precipProbability)
-
-    for nearby_airport in nearby_airports :
-        print ('{} Distance: {} mi {}'.format(nearby_airport.airport.name, nearby_airport.distance, nearby_airport.direction))
-
-    for nearby_tfr in nearby_tfrs :
-        print (nearby_tfr.id)
-
 class Weather(object):
     def __init__(self, response):
         self.current = WeatherBlockCurrent(response.currently())
@@ -411,3 +384,5 @@ def cloud_cover(cloud_float) :
 
 if __name__=="__main__":
     main()
+
+os.chdir(os.path.dirname(__file__))
