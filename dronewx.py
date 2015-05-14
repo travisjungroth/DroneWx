@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from math import *
 from bs4 import BeautifulSoup
 from shapely.geometry import Polygon
