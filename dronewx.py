@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 
 class Weather(object):
     def __init__(self, response):
-        self.current = WeatherBlockCurrent(response.currently())
+        self.current = WeatherBlockCurrent(response.currently(), response.offset())
 
         self.hourlySummary = response.hourly().summary
 
@@ -18,19 +18,15 @@ class Weather(object):
         # Limited to 8 hours, and only the one in the future.
         for hour in response.hourly().data:
             if 0 < i < 9:
-                self.hourly.append(WeatherBlockHour(hour))
+                self.hourly.append(WeatherBlockHour(hour, response.offset()))
             i += 1
 
         self.daily = []
         for day in response.daily().data:
-            self.daily.append(WeatherBlockDay(day))
+            self.daily.append(WeatherBlockDay(day, response.offset()))
 
 class WeatherBlock(object):
     def __init__(self, block):
-        try:
-            self.time = block.time.strftime('%a, %b %d at %H:%M')
-        except AttributeError:
-            self.time = 'Unknown'
 
         if hasattr(block, 'windSpeed'):
             if block.windSpeed == 0:
@@ -76,29 +72,31 @@ class WeatherBlock(object):
             self.visibility = 'Unknown'
 
 class WeatherBlockCurrent(WeatherBlock) :
-    def __init__(self, block):
+    def __init__(self, block, offset):
         super().__init__(block)
 
         try:
-            self.time = block.time.strftime('%a, %b %d at %H:%M')
+            #So hacky. Works by converting to UTC when converting to a unix time, then manually reintroduces the hour offset.
+            #Works across test and prod server though.
+            self.time = datetime.datetime.utcfromtimestamp(int(block.time.timestamp() + offset*60*60)).strftime('%a, %b %d at %H:%M')
         except AttributeError:
             self.time = 'Unknown'
 
 class WeatherBlockHour(WeatherBlock) :
-    def __init__(self, block):
+    def __init__(self, block, offset):
         super().__init__(block)
 
         try:
-            self.time = block.time.strftime('%a, %b %d at %H:%M')
+            self.time = datetime.datetime.utcfromtimestamp(int(block.time.timestamp() + offset*60*60)).strftime('%a, %b %d at %H:%M')
         except AttributeError:
             self.time = 'Unknown'
 
 class WeatherBlockDay(WeatherBlock) :
-    def __init__(self, block):
+    def __init__(self, block, offset):
         super().__init__(block)
 
         try:
-            self.time = block.time.strftime('%a, %b %d')
+            self.time = datetime.datetime.utcfromtimestamp(int(block.time.timestamp() + offset*60*60)).strftime('%a, %b %d')
         except AttributeError:
             self.time = 'Unknown'
 
