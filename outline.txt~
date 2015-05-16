@@ -1,7 +1,5 @@
-||Change time on forecast
-||set OS variable on prod server
+Change time on forecast
 Limit forecast queries per day
-Auto update aiport file
 Text
   Home page
   Briefing (warning)
