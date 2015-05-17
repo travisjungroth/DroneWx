@@ -298,14 +298,12 @@ def tfr_loader(tfr_list) :
             r = requests.get('http://tfr.faa.gov/save_pages/detail_' + tfr_id + '.xml')
             r.encoding = 'UTF-8'
             xml = r.text
-            #<Avx is the location data. Without this, they're impossible to auto map.
-            #May also be a national TFR.
-            if '<Avx>' not in xml :
+            try:
+                tfrs[tfr_id] = Tfr(xml, tfr_id)
+            except:
                 tfr_ignore_list.append(tfr_id)
                 with open('files/tfr_ignore_list.pickle', 'wb') as f :
                     pickle.dump(tfr_ignore_list, f, pickle.HIGHEST_PROTOCOL)
-                break
-            tfrs[tfr_id] = Tfr(xml, tfr_id)
             #Will almost never have to save more than one.
             #Might as well save tfrs in the loop instead of adding logic.
             with open('files/tfrs.pickle', 'wb') as f :
