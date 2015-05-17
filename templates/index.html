@@ -1,38 +1,70 @@
 {% include 'header.html' %}
     <div class="container">
       <div class="col-xs-10 col-xs-offset-1">
-        <h2 class="text-center">The low down on the down low.</h2>
-        <p>DroneWx provides weather reports, nearby airports, and flight restriction information for all UAV, UAS, multicopter and RC pilots. The information provided is for information purposes only, and should <em>not</em> be used as a sole source of preflight infromation.</p>
+        <h2 class="text-center">Preflight information for drone pilots.</h2>
+        <p>DroneWx provides weather reports, nearby airports, and flight restriction information for all UAV, UAS, multicopter and RC pilots in the USA. The information provided is for information purposes only, and should <em>not</em> be used as a sole source of preflight infromation.</p>
         <form action="briefing" method="get" id="latlong">
           <input type="hidden" name="latitude" id="latitude">
           <input type="hidden" name="longitude" id="longitude">
         </form>
         <div class="text-center">
-          <button class="btn btn-primary" onclick="getLocation()">Search My Location</button>
+          <button class="btn btn-primary" onclick="getLocation()">Use Device Location</button>
         </div>
         <div id="location-warning">
+        </div>
+        <h3 class="text-center">- or -</h3>
+        <form>
+          <div class="form-group">
+            <label for="txtAddress">Location</label>
+            <input type="text" id="txtAddress" class="form-control" placeholder="Address or just City, State">
+          </div>
+        </form>
+        <div class="text-center">
+          <button class="btn btn-primary" onclick="googleLocation()">Use Address</button>
         </div>
       </div>
     </div><!-- /.container -->
     <script>
-    var x = document.getElementById("location-warning");
+      var x = document.getElementById("location-warning");
 
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(sendLocation,locationDenied);
-        } else {
-            x.innerHTML = '<div class="alert alert-danger">Geolocation is not supported by your browser. Use the search form below instead</div>';
-        }
-    }
+      function getLocation() {
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(sendLocation,locationDenied);
+          } else {
+              x.innerHTML = '<div class="alert alert-danger">Geolocation is not supported by your browser. Use the search form below instead</div>';
+          }
+      }
 
-    function sendLocation(position) {
-      document.getElementById("latitude").value = position.coords.latitude.toFixed(3);
-      document.getElementById("longitude").value = position.coords.longitude.toFixed(3);
-      document.getElementById("latlong").submit();
-    }
+      function sendLocation(position) {
+        document.getElementById("latitude").value = position.coords.latitude.toFixed(3);
+        document.getElementById("longitude").value = position.coords.longitude.toFixed(3);
+        document.getElementById("latlong").submit();
+      }
 
-    function locationDenied() {
-      x.innerHTML = '<div class="alert alert-danger">Geolocation was denied. Use the search form below.</div>';
-    }
+      function locationDenied() {
+        x.innerHTML = '<div class="alert alert-danger">Geolocation was denied. Use the search form below.</div>';
+      }
+    </script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript">
+      function sendGoogleLocation(latitude, longitude) {
+        document.getElementById("latitude").value = latitude;
+        document.getElementById("longitude").value = longitude;
+        document.getElementById("latlong").submit();
+      }
+
+        function googleLocation() {
+            var geocoder = new google.maps.Geocoder();
+            var address = document.getElementById("txtAddress").value;
+            geocoder.geocode({ 'address': address }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var latitude = results[0].geometry.location.lat();
+                    var longitude = results[0].geometry.location.lng();
+                    sendGoogleLocation(latitude,longitude)
+                } else {
+                  x.innerHTML = '<div class="alert alert-danger">Unable to find your location.</div>';
+                }
+            });
+        };
     </script>
 {% include 'footer.html' %}
