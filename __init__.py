@@ -2,7 +2,6 @@ from flask import Flask, render_template, url_for, request
 import os, sys, forecastio
 sys.path.append('/home/jungroth/webapps/dronewx/drone')
 import dronewx
-from dronewx import Weather
 app = Flask(__name__)
 @app.route('/')
 def index():
@@ -21,7 +20,7 @@ def briefing():
             nearby_airports = dronewx.nearby_airports_finder(location, distance)
             response = forecastio.load_forecast(API_KEY, location[0], location[1])
 
-            weather = Weather(response)
+            weather = dronewx.Weather(response)
 
             return render_template('briefing.html', distance=distance, airports=nearby_airports, tfrs = nearby_tfrs, weather = weather)
         except ValueError:
@@ -31,6 +30,6 @@ def briefing():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')        
+    return render_template('about.html')
 if __name__=='__main__':
     app.run(debug=True)
