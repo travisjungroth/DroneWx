@@ -1,6 +1,5 @@
 # DroneWx
-http://dronewx.com to view the site live.
-http://travisjmorton.com for dev blog.
+This project is no longer live.
 
 There are three pieces of information being delivered.
 
