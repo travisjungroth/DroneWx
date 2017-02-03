@@ -1,5 +1,5 @@
 # DroneWx
-This project is no longer live.
+_This project is no longer live._
 
 There are three pieces of information being delivered.
 
