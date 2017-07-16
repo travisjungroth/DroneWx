@@ -4,8 +4,8 @@
         <h2 class="text-center">Preflight information for drone pilots in the USA.</h2>
         <p>DroneWx provides weather reports, nearby airports, and flight restriction information for all UAV, UAS, multicopter and RC pilots in the USA. The information provided is for information purposes only, and should <em>not</em> be used as a sole source of preflight information.</p>
         <form action="briefing" method="get" id="latlong">
-          <input type="hidden" name="latitude" id="latitude">
-          <input type="hidden" name="longitude" id="longitude">
+          <input type="hidden" name="latitude" id="latitude"/>
+          <input type="hidden" name="longitude" id="longitude"/>
         </form>
         <div class="text-center">
           <button class="btn btn-primary" onclick="getLocation()">Use Device Location</button>
@@ -16,7 +16,7 @@
         <form onsubmit="googleLocation()" id="address">
           <div class="form-group">
             <label for="txtAddress">Location</label>
-            <input type="text" id="txtAddress" class="form-control" placeholder="Address or just City, State">
+            <input type="text" id="txtAddress" class="form-control" placeholder="Address or just City, State"/>
           </div>
         </form>
         <div class="text-center">
